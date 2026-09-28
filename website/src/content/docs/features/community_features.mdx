@@ -1213,6 +1213,14 @@ For a detailed description of this feature, please refer to the feature document
   In case of drums, it is like having a Sound row + a Midi row together triggering at the same time. And in case of synths, it is like
   having a Synth clip + a Midi clip together triggering at the same time. This feature is limited to regular MIDI (that is, not for MPE).
 
+### 4.5.11 - Phase Distortion (Casio CZ) and VPS oscillators
+
+- <Badge text="c1.3" variant="tip" /> Two new oscillator types. `PHASE DIST` plays the eight waveforms of the Casio
+  CZ-101, with the CZ's wave combine, and `VPS` is vector phaseshaping. For both, the wave index becomes `DCW`: how far
+  the waveform is bent, from a pure sine at 0. Patch an envelope to it for the CZ's DCW envelope.
+  - For a detailed description, please refer to the feature documentation:
+    [Phase Distortion Documentation](/features/phase_distortion)
+
 ## 4.6 - Instrument Clip View - Kit Clip Features
 
 ### 4.6.1 - Keyboard View

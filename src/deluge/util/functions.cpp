@@ -757,6 +757,12 @@ char const* oscTypeToString(OscType oscType) {
 	case OscType::WAVETABLE:
 		return "wavetable";
 
+	case OscType::PHASE_DIST:
+		return "phaseDist";
+
+	case OscType::VPS:
+		return "vps";
+
 	case OscType::INPUT_L:
 		return "inLeft";
 
@@ -796,6 +802,12 @@ OscType stringToOscType(char const* string) {
 	}
 	else if (!strcmp(string, "wavetable")) {
 		return OscType::WAVETABLE;
+	}
+	else if (!strcmp(string, "phaseDist")) {
+		return OscType::PHASE_DIST;
+	}
+	else if (!strcmp(string, "vps")) {
+		return OscType::VPS;
 	}
 	else if (!strcmp(string, "inLeft")) {
 		return OscType::INPUT_L;

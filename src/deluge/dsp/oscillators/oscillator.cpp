@@ -29,7 +29,29 @@ Oscillator::renderOsc(OscType type, int32_t amplitude, int32_t* bufferStart, int
                       uint32_t phaseIncrement, uint32_t pulseWidth, uint32_t* startPhase, bool applyAmplitude,
                       int32_t amplitudeIncrement, bool doOscSync, uint32_t resetterPhase,
                       uint32_t resetterPhaseIncrement, uint32_t retriggerPhase, int32_t waveIndexIncrement,
-                      int sourceWaveIndexLastTime, WaveTable* waveTable) {
+                      int sourceWaveIndexLastTime, WaveTable* waveTable, const phase_distortion::Settings& pdSettings) {
+
+	// Casio CZ phase distortion and vector phaseshaping: DCW is the wave index, VPS's inflection the pulse width
+	if (type == OscType::PHASE_DIST || type == OscType::VPS) [[unlikely]] {
+		phase_distortion::render(
+		    {
+		        .settings = pdSettings,
+		        .vps = (type == OscType::VPS),
+		        .amplitude = amplitude,
+		        .amplitudeIncrement = amplitudeIncrement,
+		        .applyAmplitude = applyAmplitude,
+		        .phaseIncrement = phaseIncrement,
+		        .pulseWidth = pulseWidth,
+		        .retriggerPhase = retriggerPhase,
+		        .doOscSync = doOscSync,
+		        .resetterPhase = resetterPhase,
+		        .resetterPhaseIncrement = resetterPhaseIncrement,
+		        .waveIndex = sourceWaveIndexLastTime + 1073741824,
+		        .waveIndexIncrement = waveIndexIncrement,
+		    },
+		    bufferStart, numSamples, startPhase);
+		return;
+	}
 
 	// We save a decent bit of processing power by grabbing a local copy of the phase to work with, and just
 	// incrementing the startPhase once

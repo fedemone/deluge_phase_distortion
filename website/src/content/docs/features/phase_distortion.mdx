@@ -1,0 +1,71 @@
+---
+title: Phase Distortion (Casio CZ) and VPS
+---
+
+import { Badge } from "@astrojs/starlight/components"
+
+<Badge text="c1.3 Feature" variant="tip" />
+
+Two oscillator types for synths and kit rows: `PHASE DIST`, the phase distortion of Casio's CZ series, and `VPS`,
+vector phaseshaping, a modern superset of it.
+
+## Description
+
+A CZ oscillator reads a cosine through a bent phase. The phase climbs from 0 to 1 once per cycle; the waveform picks
+how the climb is bent, and DCW how far. With DCW at 0 the five phase-bending waves are a pure sine; raising DCW adds
+harmonics while the pitch stays put. On the CZ, DCW has its own envelope, which is why it sweeps like a filter
+without having one.
+
+On the Deluge, DCW is the oscillator's wave index, shown as `DCW` for these two types. Patch an envelope, an LFO or
+velocity to it the same way as to a wavetable position.
+
+The waveforms follow a real CZ-1, measured from the captures in Michael Rickard's
+[CZ Spelunking](https://www.kasploosh.com/cz/11800-spelunking/) study: the edges, holds and dips of each wave, where
+each wave's cycle starts, the resonant windows, and how wave combine glues two cycles together. Two things are not
+known from the hardware: how DCW steps between its ends (here the bend speeds up evenly on a log scale), and whether
+the double sine is a plain sine at DCW 0 (here it is). Open-source ports were consulted only as references.
+
+Vector phaseshaping is from J. Kleimola, V. Lazzarini, J. Timoney and V. Välimäki, "Vector Phaseshaping Synthesis",
+DAFx 2011.
+
+## Usage
+
+Set an oscillator's `TYPE` to `PHASE DIST` or `VPS`. Both work in subtractive and ring-mod modes, with unison and
+oscillator sync.
+
+### PHASE DIST
+
+- `CZ WAVE` picks the CZ-101's waveform:
+  - `SAW`: a fast edge and a slow ramp, brightening towards a sawtooth.
+  - `SQUARE`: holds on the peaks; odd harmonics only.
+  - `PULSE`: one narrow dip per cycle, thinning towards a pulse.
+  - `DOUBLE SINE`: a sine with a narrow extra dip at its peak.
+  - `SAW PULSE`: a saw that parks on its peak for part of the cycle.
+  - `RESO SAW`, `RESO TRIANGLE`, `RESO TRAPEZOID`: a resonant peak that sweeps from 1 to 15 times the note under
+    a falling, a rise-and-fall or a held-then-falling window, like a resonant filter on the window's own shape.
+- `COMBINE` is the CZ's wave combine: the oscillator alternates between its CZ wave and this one on every cycle, which
+  also adds a sub-octave. Only the five phase-bending waves combine, as on the CZ.
+- `DCW` (the wave index) sets how far the wave is bent.
+
+### VPS
+
+- `DCW` raises the inflection point, packing extra cycles into the first part of the waveform: a formant that rises
+  with it.
+- `PULSE WIDTH` moves the inflection from the middle of the cycle (0) towards its start (50).
+
+### A CZ-style patch
+
+The CZ has three envelopes per line, for pitch (DCO), waveform (DCW) and level (DCA). One way to lay them out:
+
+- Envelope 1 is the level, as always.
+- Patch envelope 2 to oscillator 1's `DCW` and envelope 3 to oscillator 2's.
+- Use oscillator 2 as the CZ's second line: the same wave slightly detuned for `1+1'`, another wave for `1+2'`, or
+  ring-mod mode.
+- A small negative `NOTE` cable to `DCW` works like the CZ's DCW key follow.
+
+## Notes
+
+- At high notes the bend is held under what the sample rate can carry, so the top of the keyboard stays clean rather
+  than folding into inharmonic tones.
+- Presets store the types as `phaseDist` and `vps`, with the CZ wave and combine as `pdWave` and `pdCombine`.
+  Older firmware loads these oscillators as triangles.

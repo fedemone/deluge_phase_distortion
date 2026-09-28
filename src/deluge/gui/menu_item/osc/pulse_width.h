@@ -48,8 +48,9 @@ public:
 			return source.hasAtLeastOneAudioFileLoaded();
 		}
 
+		// Phase distortion ignores pulse width; vector phaseshaping uses it to place its inflection.
 		return oscType != OscType::SAMPLE && oscType != OscType::INPUT_L && oscType != OscType::INPUT_R
-		       && oscType != OscType::INPUT_STEREO;
+		       && oscType != OscType::INPUT_STEREO && oscType != OscType::PHASE_DIST;
 	}
 
 	void renderInHorizontalMenu(const SlotPosition& slot) override {

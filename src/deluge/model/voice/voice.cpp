@@ -1349,15 +1349,17 @@ cantBeDoingOscSyncForFirstOsc:
 					                           ? static_cast<WaveTable*>(guides[s].audioFileHolder->audioFile)
 					                           : nullptr;
 
-					dsp::Oscillator::renderOsc(
-					    oscType, 0, spareRenderingBuffer[s + 2], spareRenderingBuffer[s + 2] + numSamples, numSamples,
-					    phaseIncrements[s], pulseWidth, &unisonParts[u].sources[s].oscPos, false, 0,
-					    doingOscSyncThisOscillator, oscSyncPos[u], phaseIncrements[0], sound.oscRetriggerPhase[s],
-					    sourceWaveIndexIncrements[s], sourceWaveIndexesLastTime[s], waveTable);
+					dsp::Oscillator::renderOsc(oscType, 0, spareRenderingBuffer[s + 2],
+					                           spareRenderingBuffer[s + 2] + numSamples, numSamples, phaseIncrements[s],
+					                           pulseWidth, &unisonParts[u].sources[s].oscPos, false, 0,
+					                           doingOscSyncThisOscillator, oscSyncPos[u], phaseIncrements[0],
+					                           sound.oscRetriggerPhase[s], sourceWaveIndexIncrements[s],
+					                           sourceWaveIndexesLastTime[s], waveTable, sound.sources[s].pdSettings);
 
 					// Sine and triangle waves come out bigger in fixed-amplitude rendering (for arbitrary reasons), so
-					// we need to compensate
-					if (oscType == OscType::SAW || oscType == OscType::ANALOG_SAW_2) {
+					// we need to compensate. Phase distortion renders at half scale, like the saw tables.
+					if (oscType == OscType::SAW || oscType == OscType::ANALOG_SAW_2 || oscType == OscType::PHASE_DIST
+					    || oscType == OscType::VPS) {
 						amplitudeForRingMod <<= 1;
 					}
 					else if (oscType == OscType::WAVETABLE) {
@@ -2489,7 +2491,7 @@ dontUseCache: {}
 			                           numSamples, phaseIncrement, pulseWidth, &unisonParts[u].sources[s].oscPos, true,
 			                           amplitudeIncrement, doOscSync, oscSyncPosThisUnison,
 			                           oscSyncPhaseIncrementsThisUnison, oscRetriggerPhase, waveIndexIncrement,
-			                           sourceWaveIndexesLastTime[s], waveTable);
+			                           sourceWaveIndexesLastTime[s], waveTable, sound.sources[s].pdSettings);
 
 			if (stereoBuffer) {
 				// TODO: if render buffer was typed we could use addPannedMono()

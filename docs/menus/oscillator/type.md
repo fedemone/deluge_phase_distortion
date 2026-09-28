@@ -9,6 +9,12 @@ Can select from:
  - <string-for name="STRING_FOR_ANALOG_SAW">ANALOG_SAW</string-for>.
  - <string-for name="STRING_FOR_WAVETABLE">WAVETABLE</string-for>.
    Wavetable oscillators must have a sample loaded with the [file menu](./file_browser.md) to produce sound.
+ - <string-for name="STRING_FOR_PHASE_DISTORTION">PHASE_DIST</string-for>
+   Casio CZ phase distortion. Pick the waveform with the [CZ wave menu](./cz_wave.md) and bend it with
+   <string-for name="STRING_FOR_DCW">DCW</string-for> (the [wave index](./wave_index.md)).
+ - <string-for name="STRING_FOR_VPS">VPS</string-for>
+   Vector phaseshaping, a superset of phase distortion: <string-for name="STRING_FOR_DCW">DCW</string-for> raises a
+   formant and the [pulse width](./pulse_width.md) moves it.
  - <string-for name="STRING_FOR_SAMPLE">SAMPLE</string-for>
    Sample oscillators must have a sample loaded with the [file menu](./file_browser.md) to produce sound. Available only
    if the oscillator type is <string-for name="STRING_FOR_SUBTRACTIVE">SUBTRACTIVE</string-for>.

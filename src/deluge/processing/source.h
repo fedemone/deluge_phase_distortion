@@ -18,6 +18,7 @@
 #pragma once
 
 #include "definitions_cxx.hpp"
+#include "dsp/oscillators/phase_distortion.h"
 #include "model/sample/sample_controls.h"
 #include "storage/multi_range/multi_range_array.h"
 #include "util/phase_increment_fine_tuner.h"
@@ -46,6 +47,9 @@ public:
 
 	DxPatch* dxPatch;
 	bool dxPatchChanged = false;
+
+	// For OscType::PHASE_DIST: the CZ waveform, and the one it alternates with each cycle.
+	deluge::dsp::phase_distortion::Settings pdSettings;
 	SampleRepeatMode repeatMode;
 
 	int8_t timeStretchAmount;

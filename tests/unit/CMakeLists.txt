@@ -38,6 +38,8 @@ FetchContent_MakeAvailable(CppUTest)
 file(GLOB_RECURSE deluge_SOURCES
         # Mock implementations
         mocks/*
+        # For phase distortion
+        ../../src/deluge/dsp/oscillators/phase_distortion.cpp
         # For LFO
         ../../src/deluge/util/d_stringbuf.cpp
         ../../src/deluge/util/lookuptables.cpp
@@ -82,6 +84,7 @@ add_executable(UnitTests
         default_name_tests.cpp
         rgb_tests.cpp
         notes_state_tests.cpp
+        phase_distortion_tests.cpp
 )
 add_test(NAME UnitTests
         COMMAND UnitTests)

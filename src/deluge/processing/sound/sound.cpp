@@ -68,6 +68,7 @@
 #include <ranges>
 
 namespace params = deluge::modulation::params;
+namespace phase_distortion = deluge::dsp::phase_distortion;
 
 extern "C" {
 #include "RZA1/mtu/mtu.h"
@@ -3353,6 +3354,7 @@ Error Sound::readSourceFromFile(Deserializer& reader, int32_t s, ParamManagerFor
                                 int32_t readAutomationUpToPos) {
 
 	Source* source = &sources[s];
+	source->pdSettings = {}; // absent attributes mean the defaults, whatever this source held before
 
 	char const* tagName;
 	while (*(tagName = reader.readNextTagOrAttributeName())) {
@@ -3408,6 +3410,18 @@ Error Sound::readSourceFromFile(Deserializer& reader, int32_t s, ParamManagerFor
 			DxPatch* patch = source->ensureDxPatch();
 			patch->setEngineMode(reader.readTagOrAttributeValueInt());
 			reader.exitTag("dx7enginemode");
+		}
+		else if (!strcmp(tagName, "pdWave")) {
+			phase_distortion::waveFromString(reader.readTagOrAttributeValue(), source->pdSettings.wave);
+			reader.exitTag("pdWave");
+		}
+		else if (!strcmp(tagName, "pdCombine")) {
+			phase_distortion::Wave combine;
+			if (phase_distortion::waveFromString(reader.readTagOrAttributeValue(), combine)
+			    && phase_distortion::isPhaseWave(combine)) {
+				source->pdSettings.combine = static_cast<uint8_t>(combine);
+			}
+			reader.exitTag("pdCombine");
 		}
 		/*
 		else if (!strcmp(tagName, "sampleSync")) {
@@ -3739,6 +3753,14 @@ void Sound::writeSourceToFile(Serializer& writer, int32_t s, char const* tagName
 			else {
 				goto justCloseTag;
 			}
+		}
+		else if (source->oscType == OscType::PHASE_DIST && synthMode != SynthMode::FM) {
+			writer.writeAttribute("pdWave", phase_distortion::waveToString(source->pdSettings.wave));
+			if (source->pdSettings.combine < phase_distortion::kNumPhaseWaves) {
+				writer.writeAttribute("pdCombine", phase_distortion::waveToString(static_cast<phase_distortion::Wave>(
+				                                       source->pdSettings.combine)));
+			}
+			goto justCloseTag;
 		}
 		else if (source->oscType == OscType::DX7
 		         && synthMode != SynthMode::FM) { // Don't combine this with the above "if" - there's an "else" below

@@ -81,13 +81,15 @@ public:
 		(void)optType;
 		using enum l10n::String;
 		deluge::vector options = {
-		    l10n::getView(STRING_FOR_SINE),          //<
-		    l10n::getView(STRING_FOR_TRIANGLE),      //<
-		    l10n::getView(STRING_FOR_SQUARE),        //<
-		    l10n::getView(STRING_FOR_ANALOG_SQUARE), //<
-		    l10n::getView(STRING_FOR_SAW),           //<
-		    l10n::getView(STRING_FOR_ANALOG_SAW),    //<
-		    l10n::getView(STRING_FOR_WAVETABLE),     //<
+		    l10n::getView(STRING_FOR_SINE),             //<
+		    l10n::getView(STRING_FOR_TRIANGLE),         //<
+		    l10n::getView(STRING_FOR_SQUARE),           //<
+		    l10n::getView(STRING_FOR_ANALOG_SQUARE),    //<
+		    l10n::getView(STRING_FOR_SAW),              //<
+		    l10n::getView(STRING_FOR_ANALOG_SAW),       //<
+		    l10n::getView(STRING_FOR_WAVETABLE),        //<
+		    l10n::getView(STRING_FOR_PHASE_DISTORTION), //<
+		    l10n::getView(STRING_FOR_VPS),              //<
 		};
 
 		if (soundEditor.currentSound->getSynthMode() == SynthMode::RINGMOD) {
@@ -130,10 +132,15 @@ public:
 		oled_canvas::Canvas& image = OLED::main;
 
 		const OscType osc_type = soundEditor.currentSound->sources[sourceId_].oscType;
-		if (osc_type == OscType::DX7) {
+		if (osc_type == OscType::DX7 || osc_type == OscType::VPS) {
 			const auto option = getOptions(OptType::FULL)[getValue()].data();
 			return image.drawStringCentered(option, slot.start_x, slot.start_y + kHorizontalMenuSlotYOffset + 5,
 			                                kTextTitleSpacingX, kTextTitleSizeY, slot.width);
+		}
+		if (osc_type == OscType::PHASE_DIST) {
+			return image.drawStringCentered(l10n::get(l10n::String::STRING_FOR_PHASE_DISTORTION_SHORT), slot.start_x,
+			                                slot.start_y + kHorizontalMenuSlotYOffset + 5, kTextTitleSpacingX,
+			                                kTextTitleSizeY, slot.width);
 		}
 
 		const Icon& icon = [&] {
