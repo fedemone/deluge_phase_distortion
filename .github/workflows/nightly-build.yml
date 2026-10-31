@@ -6,6 +6,9 @@ on:
   schedule:
     - cron: "14 0 * * *" # runs daily at 00:14
 
+permissions:
+  pages: write
+
 jobs:
   nightly-detect:
     if: github.repository == 'SynthstromAudible/DelugeFirmware'
