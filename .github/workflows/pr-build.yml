@@ -21,7 +21,7 @@ jobs:
     uses: ./.github/workflows/changes.yml
     permissions:
       pull-requests: read
-      pages: write
+      contents: write
   release-build:
     name: Build check - Release
     needs: changes
