@@ -6,9 +6,6 @@ on:
   schedule:
     - cron: "14 0 * * *" # runs daily at 00:14
 
-permissions:
-  pages: write
-
 jobs:
   nightly-detect:
     if: github.repository == 'SynthstromAudible/DelugeFirmware'
@@ -32,6 +29,8 @@ jobs:
             echo "count=$count" >> "$GITHUB_OUTPUT"
           fi
   nightly-build:
+    permissions:
+      contents: write
     uses: ./.github/workflows/build.yml
     needs: nightly-detect
     if: needs.nightly-detect.outputs.new-commits > 0
