@@ -21,10 +21,11 @@ jobs:
     uses: ./.github/workflows/changes.yml
     permissions:
       pull-requests: read
-      contents: write
   release-build:
     name: Build check - Release
     needs: changes
+    permissions:
+      contents: write
     uses: ./.github/workflows/build.yml
     with:
       skip: ${{ needs.changes.outputs.firmware != 'true' }}
