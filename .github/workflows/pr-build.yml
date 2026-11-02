@@ -35,6 +35,8 @@ jobs:
   debug-build:
     name: Build check - Debug
     needs: changes
+    permissions:
+      contents: write
     uses: ./.github/workflows/build.yml
     with:
       skip: ${{ needs.changes.outputs.firmware != 'true' }}
