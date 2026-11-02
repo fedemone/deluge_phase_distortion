@@ -40,6 +40,8 @@ jobs:
       build-tag: "nightly"
       branch: "main"
   nightly-publish:
+    permissions:
+      contents: write
     uses: ./.github/workflows/publish.yml
     needs: nightly-build
     with:
