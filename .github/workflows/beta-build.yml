@@ -30,7 +30,7 @@ jobs:
           fi
   beta-build:
     permissions:
-      pages: write
+      contents: write
     uses: ./.github/workflows/build.yml
     needs: beta-detect
     if: needs.beta-detect.outputs.new-commits > 0
@@ -40,6 +40,8 @@ jobs:
       build-tag: "beta"
       branch: "release/1.3"
   beta-publish:
+    permissions:
+      contents: write
     uses: ./.github/workflows/publish.yml
     needs: beta-build
     with:
